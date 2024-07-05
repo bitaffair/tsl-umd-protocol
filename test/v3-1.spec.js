@@ -54,7 +54,7 @@ describe('v3.1', () => {
 
   describe('compose > parse', () => {
 
-    it('asd', () => {
+    it('input should euqal output', () => {
       const input = {
         address: 4,
         brightness: 3,
@@ -77,10 +77,10 @@ describe('v3.1', () => {
         address: -50,
         brightness: 3,
         label: 'CAM 1',
-        t1: 1,
-        t2: 1,
+        t1: 0,
+        t2: 0,
         t3: 0,
-        t4: 1,
+        t4: 0,
       })))
         .to.contain({
           address: 0
@@ -96,10 +96,10 @@ describe('v3.1', () => {
         address: 400,
         brightness: 3,
         label: 'CAM 1',
-        t1: 1,
-        t2: 1,
+        t1: 0,
+        t2: 0,
         t3: 0,
-        t4: 1,
+        t4: 0,
       })))
         .to.contain({
           address: 127
@@ -115,10 +115,10 @@ describe('v3.1', () => {
         address: 4,
         brightness: -3,
         label: 'CAM 1',
-        t1: 1,
-        t2: 1,
+        t1: 0,
+        t2: 0,
         t3: 0,
-        t4: 1,
+        t4: 0,
       })))
         .to.contain({
           brightness: 0
@@ -134,10 +134,10 @@ describe('v3.1', () => {
         address: 4,
         brightness: 5,
         label: 'CAM 1',
-        t1: 1,
-        t2: 1,
+        t1: 0,
+        t2: 0,
         t3: 0,
-        t4: 1,
+        t4: 0,
       })))
         .to.contain({
           brightness: 3
@@ -195,10 +195,10 @@ describe('v3.1', () => {
         address: false,
         brightness: 3,
         label: 'CAM 1',
-        t1: false,
+        t1: 0,
         t2: 0,
-        t3: null,
-        t4: undefined,
+        t3: 0,
+        t4: 0,
       })))
         .to.contain({
           address: 0
@@ -212,10 +212,10 @@ describe('v3.1', () => {
         address: null,
         brightness: 3,
         label: 'CAM 1',
-        t1: false,
+        t1: 0,
         t2: 0,
-        t3: null,
-        t4: undefined,
+        t3: 0,
+        t4: 0,
       })))
         .to.contain({
           address: 0
@@ -229,10 +229,10 @@ describe('v3.1', () => {
         address: undefined,
         brightness: 3,
         label: 'CAM 1',
-        t1: false,
+        t1: 0,
         t2: 0,
-        t3: null,
-        t4: undefined,
+        t3: 0,
+        t4: 0,
       })))
         .to.contain({
           address: 0
@@ -247,10 +247,10 @@ describe('v3.1', () => {
         address: 0,
         brightness: null,
         label: 'CAM 1',
-        t1: false,
+        t1: 0,
         t2: 0,
-        t3: null,
-        t4: undefined,
+        t3: 0,
+        t4: 0,
       })))
         .to.contain({
           brightness: 0
@@ -266,10 +266,10 @@ describe('v3.1', () => {
         address: 0,
         brightness: false,
         label: 'CAM 1',
-        t1: false,
+        t1: 0,
         t2: 0,
-        t3: null,
-        t4: undefined,
+        t3: 0,
+        t4: 0,
       })))
         .to.contain({
           brightness: 0
@@ -285,10 +285,10 @@ describe('v3.1', () => {
         address: 0,
         brightness: undefined,
         label: 'CAM 1',
-        t1: false,
+        t1: 0,
         t2: 0,
-        t3: null,
-        t4: undefined,
+        t3: 0,
+        t4: 0,
       })))
         .to.contain({
           brightness: 0
