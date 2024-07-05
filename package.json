@@ -1,0 +1,25 @@
+{
+  "name": "@bitaffair/tsl-umd-protocol",
+  "version": "1.0.0",
+  "description": "Parse and compose tsl-umd messages",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ./test/*.spec.*",
+    "test:watch": "npm run test -- --watch --parallel"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [
+    "tally",
+    "tsl",
+    "umd"
+  ],
+  "type": "module",
+  "devDependencies": {
+    "@hapi/code": "^9.0.3",
+    "mocha": "^10.6.0"
+  },
+  "dependencies": {
+    "binary-parser": "^2.2.1"
+  }
+}
