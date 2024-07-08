@@ -20,10 +20,17 @@ describe('v4.0', () => {
           address: 4,
           brightness: 0,
           label: 'TSL4',
-          t1: 0,
-          t2: 0,
-          t3: 0,
-          t4: 0,
+          version: '4.0',
+          displayL: {
+            LH: 1,
+            RH: 2,
+            TXT: 1,
+          },
+          displayR: {
+            LH: 2,
+            RH: 2,
+            TXT: 1,
+          }
         })
 
     });
@@ -31,273 +38,284 @@ describe('v4.0', () => {
   });
 
 
-  describe.skip('compose', () => {
+  describe('compose', () => {
 
     it('should return buffer', () => {
 
       const buf = compose({
-        address: 1,
-        brightness: 3,
-        label: 'CAM 1',
-        t1: 0,
-        t2: 0,
-        t3: 0,
-        t4: 1
+        address: 4,
+        brightness: 0,
+        label: 'TSL4',
+        version: '4.0',
+        displayL: {
+          LH: 1,
+          RH: 2,
+          TXT: 1,
+        },
+        displayR: {
+          LH: 2,
+          RH: 2,
+          TXT: 1,
+        }
       });
 
       expect(buf)
         .to.be.a.buffer()
-        .to.equal(Buffer.from(BUFREF_1))
+        .to.equal(Buffer.from(BUFREF_1));
+
     });
 
   });
 
 
-  describe.skip('compose > parse', () => {
+  describe('compose > parse', () => {
 
     it('input should euqal output', () => {
+
       const input = {
         address: 4,
         brightness: 3,
         label: 'CAM 1',
-        t1: 1,
-        t2: 1,
-        t3: 0,
-        t4: 1,
-      }
+        version: '4.0',
+        displayL: {
+          LH: 0,
+          RH: 0,
+          TXT: 0
+        },
+        displayR: {
+          LH: 0,
+          RH: 0,
+          TXT: 0
+        }
+      };
 
       expect(parse(compose(input)))
         .to.equal(input);
 
-    })
-
-
-    it('address lt 0 should result in address = 0', () => {
-
-      expect(parse(compose({
-        address: -50,
-        brightness: 3,
-        label: 'CAM 1',
-        t1: 0,
-        t2: 0,
-        t3: 0,
-        t4: 0,
-      })))
-        .to.contain({
-          address: 0
-        });
-
     });
 
 
 
-    it('address gt 127 should result in address = 127', () => {
+    describe('.address', () => {
 
-      expect(parse(compose({
-        address: 400,
-        brightness: 3,
-        label: 'CAM 1',
-        t1: 0,
-        t2: 0,
-        t3: 0,
-        t4: 0,
-      })))
-        .to.contain({
-          address: 127
-        });
+      it('address: false should use address = 0', () => {
 
-    });
+        expect(parse(compose({
+          address: false,
+          brightness: 3,
+          label: 'CAM 1',
+
+        })))
+          .to.contain({
+            address: 0
+          });
+
+      });
+
+      it('address: null should use address = 0', () => {
+
+        expect(parse(compose({
+          address: null,
+          brightness: 3,
+          label: 'CAM 1',
+
+        })))
+          .to.contain({
+            address: 0
+          });
+
+      });
+
+      it('address: undefined should use address = 0', () => {
+
+        expect(parse(compose({
+          address: undefined,
+          brightness: 3,
+          label: 'CAM 1',
+
+        })))
+          .to.contain({
+            address: 0
+          });
+
+      });
+
+      it('address lt 0 should result in address = 0', () => {
+
+        expect(parse(compose({
+          address: -50,
+          brightness: 3,
+          label: 'CAM 1',
+
+        })))
+          .to.contain({
+            address: 0
+          });
+
+      });
 
 
 
-    it('brightness lt 0 should result in brightness = 0', () => {
+      it('address gt 127 should result in address = 127', () => {
 
-      expect(parse(compose({
-        address: 4,
-        brightness: -3,
-        label: 'CAM 1',
-        t1: 0,
-        t2: 0,
-        t3: 0,
-        t4: 0,
-      })))
-        .to.contain({
-          brightness: 0
-        });
+        expect(parse(compose({
+          address: 400,
+          brightness: 3,
+          label: 'CAM 1',
 
-    });
+        })))
+          .to.contain({
+            address: 127
+          });
 
-
-
-    it('brightness gt 3 should result in brightness = 3', () => {
-
-      expect(parse(compose({
-        address: 4,
-        brightness: 5,
-        label: 'CAM 1',
-        t1: 0,
-        t2: 0,
-        t3: 0,
-        t4: 0,
-      })))
-        .to.contain({
-          brightness: 3
-        });
-
-    });
-
-
-    it('tally should be 1 on truly values', () => {
-
-      expect(parse(compose({
-        address: 4,
-        brightness: 5,
-        label: 'CAM 1',
-        t1: true,
-        t2: 1,
-        t3: 'a',
-        t4: '1',
-      })))
-        .to.contain({
-          t1: 1,
-          t2: 1,
-          t3: 1,
-          t4: 1
-        });
-
-    });
-
-    it('tally should be 0 on falsy values', () => {
-
-      expect(parse(compose({
-        address: 4,
-        brightness: 5,
-        label: 'CAM 1',
-        t1: false,
-        t2: 0,
-        t3: null,
-        t4: undefined,
-      })))
-        .to.contain({
-          t1: 0,
-          t2: 0,
-          t3: 0,
-          t4: 0
-        });
+      });
 
     });
 
 
+    describe('.brightness', () => {
+      it('brightness: null should use brightness = 0', () => {
 
+        expect(parse(compose({
+          address: 0,
+          brightness: null,
+          label: 'CAM 1',
 
-    it('address: false should use address = 0', () => {
+        })))
+          .to.contain({
+            brightness: 0
+          });
 
-      expect(parse(compose({
-        address: false,
-        brightness: 3,
-        label: 'CAM 1',
-        t1: 0,
-        t2: 0,
-        t3: 0,
-        t4: 0,
-      })))
-        .to.contain({
-          address: 0
-        });
-
-    });
-
-    it('address: null should use address = 0', () => {
-
-      expect(parse(compose({
-        address: null,
-        brightness: 3,
-        label: 'CAM 1',
-        t1: 0,
-        t2: 0,
-        t3: 0,
-        t4: 0,
-      })))
-        .to.contain({
-          address: 0
-        });
-
-    });
-
-    it('address: undefined should use address = 0', () => {
-
-      expect(parse(compose({
-        address: undefined,
-        brightness: 3,
-        label: 'CAM 1',
-        t1: 0,
-        t2: 0,
-        t3: 0,
-        t4: 0,
-      })))
-        .to.contain({
-          address: 0
-        });
-
-    });
-
-
-    it('brightness: null should use brightness = 0', () => {
-
-      expect(parse(compose({
-        address: 0,
-        brightness: null,
-        label: 'CAM 1',
-        t1: 0,
-        t2: 0,
-        t3: 0,
-        t4: 0,
-      })))
-        .to.contain({
-          brightness: 0
-        });
-
-    });
+      });
 
 
 
-    it('brightness: false should use brightness = 0', () => {
+      it('brightness: false should use brightness = 0', () => {
 
-      expect(parse(compose({
-        address: 0,
-        brightness: false,
-        label: 'CAM 1',
-        t1: 0,
-        t2: 0,
-        t3: 0,
-        t4: 0,
-      })))
-        .to.contain({
-          brightness: 0
-        });
+        expect(parse(compose({
+          address: 0,
+          brightness: false,
+          label: 'CAM 1',
+
+        })))
+          .to.contain({
+            brightness: 0
+          });
+
+      });
+
+
+
+      it('brightness: undefined should use brightness = 0', () => {
+
+        expect(parse(compose({
+          address: 0,
+          brightness: undefined,
+          label: 'CAM 1',
+
+        })))
+          .to.contain({
+            brightness: 0
+          });
+
+      });
+
+
+
+      it('brightness lt 0 should result in brightness = 0', () => {
+
+        expect(parse(compose({
+          address: 4,
+          brightness: -3,
+          label: 'CAM 1',
+
+        })))
+          .to.contain({
+            brightness: 0
+          });
+
+      });
+
+
+
+      it('brightness gt 3 should result in brightness = 3', () => {
+
+        expect(parse(compose({
+          address: 4,
+          brightness: 5,
+          label: 'CAM 1',
+
+        })))
+          .to.contain({
+            brightness: 3
+          });
+
+      });
+
 
     });
 
 
+    for (const display of ['displayL', 'displayR']) {
 
-    it('brightness: undefined should use brightness = 0', () => {
+      describe(`.${display}`, () => {
 
-      expect(parse(compose({
-        address: 0,
-        brightness: undefined,
-        label: 'CAM 1',
-        t1: 0,
-        t2: 0,
-        t3: 0,
-        t4: 0,
-      })))
-        .to.contain({
-          brightness: 0
-        });
+        for (const attr of ['LH', 'RH', 'TXT']) {
 
-    });
+          describe(`.${attr}`, () => {
+
+            for (let val = 0; val < 3; val++) {
+              it(`should equal ${val}`, () => {
+                expect(parse(compose({
+                  address: 0,
+                  brightness: undefined,
+                  label: 'CAM 1',
+                  [display]: {
+                    [attr]: val
+                  }
+                }))[display])
+                  .to.contain({
+                    [attr]: val
+                  });
+              });
+            }
+
+            it(`negative value should be replaced by 0`, () => {
+              expect(parse(compose({
+                address: 0,
+                brightness: undefined,
+                label: 'CAM 1',
+                [display]: {
+                  [attr]: -1
+                }
+              }))[display])
+                .to.contain({
+                  [attr]: 0
+                });
+            });
+
+            it(`value greater than 3 should be replaced by 3`, () => {
+              expect(parse(compose({
+                address: 0,
+                brightness: undefined,
+                label: 'CAM 1',
+                [display]: {
+                  [attr]: 5
+                }
+              }))[display])
+                .to.contain({
+                  [attr]: 3
+                });
+            });
+
+          });
 
 
+        }
+
+      });
+
+    }
 
 
   });
