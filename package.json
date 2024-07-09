@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha ./test/*.spec.*",
     "test:watch": "npm run test -- --watch --parallel",
-    "build": "npx rollup index.js --file index.cjs --format cjs"
+    "build": "npx rollup index.js --file index.cjs --format cjs",
+    "prepublishOnly": "npm test && npm run build"
   },
   "author": {
     "email": "cb@bitaffair.io",
