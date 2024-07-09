@@ -31,5 +31,14 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bitaffair/tsl-umd-protocol.git"
+  },
+  "homepage": "https://github.com/bitaffair/tsl-umd-protocol",
+  "bugs": {
+    "url": "https://github.com/bitaffair/tsl-umd-protocol/issues",
+    "email": "hello@bitaffair.io"
   }
 }
