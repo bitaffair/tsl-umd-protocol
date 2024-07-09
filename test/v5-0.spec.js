@@ -2,7 +2,7 @@
 
 import { expect } from '@hapi/code';
 import { v5 } from '../index.js';
-const { compose, parse } = v5;
+const { compose, parse, wrapForStream, unwrapFromStream, DLE, STX } = v5;
 
 describe('v5.0', () => {
 
@@ -148,7 +148,6 @@ describe('v5.0', () => {
 
 
     });
-
 
     describe('.displays', () => {
 
@@ -376,9 +375,63 @@ describe('v5.0', () => {
 
     });
 
+  });
 
 
+  describe('streamWrap', () => {
 
+    describe('wrapForStream(buf)', () => {
+
+      it('should wrap', () => {
+
+        const buf = wrapForStream(Buffer.from(['a', 'b', 'c', DLE, 'e', DLE, 'g']));
+
+        expect(buf)
+          .to.equal(Buffer.from([DLE, STX, 'a', 'b', 'c', DLE, DLE, 'e', DLE, DLE, 'g']))
+
+      });
+
+    });
+
+
+    describe('unwrapFromStream(buf)', () => {
+
+      it('should unwrap', () => {
+
+        const buf = unwrapFromStream(Buffer.from([DLE, STX, 'a', 'b', 'c', DLE, DLE, 'e', DLE, DLE, 'g']));
+
+        expect(buf)
+          .to.equal(Buffer.from(['a', 'b', 'c', DLE, 'e', DLE, 'g']));
+
+      });
+
+    });
+
+    it('parsing should always unwrap', () => {
+
+      const buf = compose({
+        STREAM: true,
+        displays: [{
+          index: 0
+        }]
+      });
+
+      expect(buf.subarray(0, 2))
+        .to.equal(Buffer.from([DLE, STX]));
+
+      const msg = parse(buf);
+
+      expect(msg)
+        .to.be.an.object()
+        .to.contain({
+          version: '5.0',
+          STREAM: true
+        });
+
+    });
 
   });
+
+
+
 });

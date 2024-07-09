@@ -65,7 +65,7 @@ Implemented versions:
   - `TXT` *(Number)* Text color (0-3)
   - `label` *(String)* Display label (Unicode by default)
 - `UNICODE` *(Boolean, Default: true)* If set to `false` labels will be ASCII encoded during composition.
-
+- `STREAM` *(Boolean, Default: false)* If set the returned buffer is prepared for stream transport with DLE/STX prefix and stuffed DLE characters. Use this for TCP or other stream interfaces.
 
 
 
