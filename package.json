@@ -1,7 +1,7 @@
 {
   "name": "@bitaffair/tsl-umd-protocol",
   "version": "1.0.0",
-  "description": "Parse and compose tsl-umd messages",
+  "description": "Compose and parse tsl-umd messages in different versions",
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test/*.spec.*",
