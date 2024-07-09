@@ -1,5 +1,7 @@
 # @bitaffair/tsl-umd-protocol
 
+[![Test CI](https://github.com/bitaffair/tsl-umd-protocol/actions/workflows/testing.js.yml/badge.svg)](https://github.com/bitaffair/tsl-umd-protocol/actions/workflows/testing.js.yml)
+
 This module contains all versions of TSL-UMD protocol to control *tally lights* and *under monitor displays*. Its single purpose is to `compose` and `parse` binary messages. Sending and receiving is not part if it. All details about the protocol are based on the specification in [this document](https://tslproducts.com/media/1959/tsl-umd-protocol.pdf). This library is **inofficial** and therefore is **not developed or supported by [TSL Products](https://tslproducts.com/)**.
 
 
