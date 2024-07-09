@@ -28,5 +28,8 @@
   "exports": {
     "import": "./index.js",
     "require": "./index.cjs"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
