@@ -39,6 +39,7 @@ Implemented versions:
 - `address` *(Number)* Display address (0-126)
 - `brightness` *(Number)* Brightness (0-3)
 - `label` *(String)* Display label (max. 16 chars ASCII)
+- `version` *(String, Always: 3.1)*
 - `t1` *(Boolean)* Tally 1 status
 - `t2` *(Boolean)* Tally 2 status
 - `t3` *(Boolean)* Tally 3 status
