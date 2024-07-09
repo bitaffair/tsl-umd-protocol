@@ -235,6 +235,90 @@ var index$1 = /*#__PURE__*/Object.freeze({
   parse: parse$1
 });
 
+const DLE = 0xFE;
+const STX = 0x02;
+
+const DLE_ESCAPED = Buffer.from([DLE, DLE]);
+
+/**
+ * Check for presence of packet start DLE/STX
+ * 
+ * @param {Buffer} buf 
+ * @returns true/false
+ */
+const isWrapped = buf => {
+  return buf[0] === DLE && buf[1] === STX;
+};
+
+
+
+
+/**
+ * Remove packet start DLE/STX and unstuff DLE/DLE
+ * 
+ * @param {Buffer} buf 
+ * @returns Buffer
+ */
+const unwrapFromStream = buf => {
+
+  if (!isWrapped(buf)) {
+    return buf;
+  }
+
+  // remove packet start
+  buf = buf.subarray(2);
+
+  // unstuff DLE/DLE
+  while (true) {
+    const index = buf.indexOf(DLE_ESCAPED);
+
+    if (index === -1) {
+      break;
+    }
+
+    buf = Buffer.concat([
+      buf.subarray(0, index),
+      buf.subarray(index + 1),
+    ]);
+  }
+
+  return buf
+};
+
+
+
+
+
+
+const wrapForStream = buf => {
+
+  // add packe start DLE/STX
+  buf = Buffer.concat([
+    Buffer.from([DLE, STX]),
+    buf
+  ]);
+
+  // stuff occurrence of DLE to DLE/DLE
+  let offset = 2;
+  while (true) {
+    let index = buf.indexOf(DLE, offset);
+
+    if (index === -1) {
+      break;
+    }
+
+    buf = Buffer.concat([
+      buf.subarray(0, index),
+      DLE_ESCAPED,
+      buf.subarray(index + 1)
+    ]);
+
+    offset = index + 2;
+  }
+
+  return buf;
+};
+
 /**
  * Compose display message to buffer
  * Message definition: INDEX(16) / CONTROL(8) / (LENGTH(16) / TEXT)
@@ -281,6 +365,10 @@ const composeDMSG = (obj, options) => {
 
 
 
+
+
+
+
 const compose = obj => {
 
   const isUnicode = ('UNICODE' in obj) ? obj.UNICODE : true;
@@ -313,7 +401,7 @@ const compose = obj => {
 
 
 
-  const buf = Buffer.concat([
+  let buf = Buffer.concat([
     HEADER,
     ...DMSGS
   ]);
@@ -321,10 +409,22 @@ const compose = obj => {
   // set PBC
   buf.writeUInt16LE(buf.length - 2, 0);
 
+  // wrap for stream
+  if (obj.STREAM === true) {
+    buf = wrapForStream(buf);
+  }
+
   return buf;
 };
 
 const parse = buf => {
+
+  let STREAM = isWrapped(buf);
+  if (STREAM) {
+    buf = unwrapFromStream(buf);
+  }
+
+  buf = unwrapFromStream(buf);
 
   const PBC = buf.readUInt16LE(0);
   const VER = buf.readUInt8(2);
@@ -376,6 +476,7 @@ const parse = buf => {
 
 
   return {
+    STREAM,
     version: `5.${VER}`,
     screen: SCREEN === 65535 ? 'all' : SCREEN,
     displays
@@ -384,8 +485,13 @@ const parse = buf => {
 
 var index = /*#__PURE__*/Object.freeze({
   __proto__: null,
+  DLE: DLE,
+  STX: STX,
   compose: compose,
-  parse: parse
+  isWrapped: isWrapped,
+  parse: parse,
+  unwrapFromStream: unwrapFromStream,
+  wrapForStream: wrapForStream
 });
 
 exports.v3 = index$2;
