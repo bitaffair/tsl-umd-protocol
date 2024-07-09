@@ -1,6 +1,6 @@
 {
   "name": "@bitaffair/tsl-umd-protocol",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Compose and parse tsl-umd messages in different versions",
   "main": "index.js",
   "scripts": {
