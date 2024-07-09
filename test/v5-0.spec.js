@@ -1,7 +1,7 @@
 'use strict';
 
 import { expect } from '@hapi/code';
-import { v5 } from '../index.js';
+import { v5 } from '@bitaffair/tsl-umd-protocol';
 const { compose, parse, wrapForStream, unwrapFromStream, DLE, STX } = v5;
 
 describe('v5.0', () => {

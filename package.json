@@ -2,11 +2,11 @@
   "name": "@bitaffair/tsl-umd-protocol",
   "version": "1.0.4",
   "description": "Compose and parse tsl-umd messages in different versions",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "mocha ./test/*.spec.*",
     "test:watch": "npm run test -- --watch --parallel",
-    "build": "npx rollup index.js --file index.cjs --format cjs",
+    "build": "npx rollup index.js --file ./dist/index.cjs --format cjs",
     "prepublishOnly": "npm test && npm run build"
   },
   "author": {
@@ -27,8 +27,8 @@
     "rollup": "^4.18.1"
   },
   "exports": {
-    "import": "./index.js",
-    "require": "./index.cjs"
+    "import": "./lib/index.js",
+    "require": "./dist/index.cjs"
   },
   "publishConfig": {
     "access": "public"

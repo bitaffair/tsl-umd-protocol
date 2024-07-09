@@ -1,7 +1,7 @@
 'use strict';
 
 import { expect } from '@hapi/code';
-import { v4 } from '../index.js';
+import { v4 } from '@bitaffair/tsl-umd-protocol';
 const { compose, parse } = v4;
 
 
