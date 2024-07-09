@@ -1,9 +1,8 @@
 'use strict';
 
 import { expect } from '@hapi/code';
-import { parse, compose } from '../lib/v5-0/index.js';
-
-
+import { v5 } from '../index.js';
+const { compose, parse } = v5;
 
 describe('v5.0', () => {
 
@@ -34,6 +33,20 @@ describe('v5.0', () => {
       }]
     };
 
+
+    describe('.version', () => {
+      it('should be 5.0 by default', () => {
+
+        expect(parse(compose({
+          ...DEFAULT_OBJECT
+        })))
+          .to.contain({
+            version: '5.0',
+          });
+
+      });
+
+    });
 
     describe('.screen', () => {
 

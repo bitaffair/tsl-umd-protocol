@@ -1,7 +1,9 @@
 'use strict';
 
 import { expect } from '@hapi/code';
-import { parse, compose } from '../lib/v3-1/index.js';
+import { v3 } from '../index.js';
+const { compose, parse } = v3;
+
 
 
 

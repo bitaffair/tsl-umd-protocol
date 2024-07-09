@@ -1,8 +1,8 @@
 'use strict';
 
 import { expect } from '@hapi/code';
-import { parse, compose } from '../lib/v4-0/index.js';
-
+import { v4 } from '../index.js';
+const { compose, parse } = v4;
 
 
 describe('v4.0', () => {
@@ -91,6 +91,24 @@ describe('v4.0', () => {
 
       expect(parse(compose(input)))
         .to.equal(input);
+
+    });
+
+
+
+    describe('.version', () => {
+      it('should be 4.0 by default', () => {
+
+        expect(parse(compose({
+          address: 0,
+          brightness: 3,
+          label: 'CAM 1',
+        })))
+          .to.contain({
+            version: '4.0',
+          });
+
+      });
 
     });
 
