@@ -5,21 +5,28 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test/*.spec.*",
-    "test:watch": "npm run test -- --watch --parallel"
+    "test:watch": "npm run test -- --watch --parallel",
+    "build": "npx rollup index.js --file index.cjs --format cjs"
   },
   "author": "",
   "license": "ISC",
   "keywords": [
     "tally",
     "tsl",
-    "umd"
+    "umd",
+    "protocol"
   ],
   "type": "module",
   "devDependencies": {
     "@hapi/code": "^9.0.3",
-    "mocha": "^10.6.0"
+    "mocha": "^10.6.0",
+    "rollup": "^4.18.1"
   },
   "dependencies": {
     "binary-parser": "^2.2.1"
+  },
+  "exports": {
+    "import": "./index.js",
+    "require": "./index.cjs"
   }
 }
