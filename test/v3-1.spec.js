@@ -18,13 +18,14 @@ describe('v3.1', () => {
 
       expect(data)
         .to.equal({
+          version: '3.1',
           address: 1,
           brightness: 3,
           label: 'CAM 1',
-          t1: 0,
+          t1: 1,
           t2: 0,
           t3: 0,
-          t4: 1,
+          t4: 0,
         })
 
     });
@@ -40,10 +41,10 @@ describe('v3.1', () => {
         address: 1,
         brightness: 3,
         label: 'CAM 1',
-        t1: 0,
+        t1: 1,
         t2: 0,
         t3: 0,
-        t4: 1
+        t4: 0
       });
 
       expect(buf)
@@ -56,8 +57,9 @@ describe('v3.1', () => {
 
   describe('compose > parse', () => {
 
-    it('input should euqal output', () => {
+    it('input should equal output', () => {
       const input = {
+        version: '3.1',
         address: 4,
         brightness: 3,
         label: 'CAM 1',
