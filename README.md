@@ -70,7 +70,7 @@ Implemented versions:
 
 
 
-# License
+## License
 (The MIT License)
 
 Copyright (c) 2024 Bitaffair GmbH <hello@bitaffair.io>
