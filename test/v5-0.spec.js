@@ -5,7 +5,7 @@ import { v5 } from '@bitaffair/tsl-umd-protocol';
 import { Duplex } from 'node:stream';
 import { once } from 'node:events';
 
-const { compose, parse, wrapForStream, unwrapFromStream, DLE, STX, unstuff, StreamTransformer } = v5;
+const { compose, parse, wrapForStream, unwrapFromStream, DLE, STX, unstuff, StreamUnwrapTransformer } = v5;
 
 describe('v5.0', () => {
 
@@ -449,11 +449,11 @@ describe('v5.0', () => {
     });
 
 
-    describe('StreamTransform', () => {
+    describe('StreamUnwrapTransformer', () => {
 
       let transformer;
       beforeEach(() => {
-        transformer = new StreamTransformer();
+        transformer = new StreamUnwrapTransformer();
         transformer.on('error', (err) => console.log('error', err))
       });
 

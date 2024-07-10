@@ -70,6 +70,27 @@ Implemented versions:
 - `UNICODE` *(Boolean, Default: true)* If set to `false` labels will be ASCII encoded during composition.
 - `STREAM` *(Boolean, Default: false)* If set the returned buffer is prepared for stream transport with DLE/STX prefix and stuffed DLE characters. Use this for TCP or other stream interfaces.
 
+### StreamUnwrapTransformer()
+
+It implements a [Transform](https://nodejs.org/api/stream.html#new-streamtransformoptions) which can be used on fragmented source streams (like a TCP socket) to get clean, unwrapped and parsable buffers from chunks.
+
+**Example usage on a TCP socket:**
+```javascript
+import net from 'node:net';
+import { v5 } from '@bitaffair/tsl-umd-protocol';
+
+net.createServer(socket => {
+  const transformer = new v5.StreamUnwrapTransformer();
+
+  transformer.on('data', buf => {
+    const obj = v5.parse(buf);
+    // go on from here
+  });
+
+  socket.pipe(transformer);
+});
+
+```
 
 
 
