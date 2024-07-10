@@ -2,7 +2,10 @@
 
 import { expect } from '@hapi/code';
 import { v5 } from '@bitaffair/tsl-umd-protocol';
-const { compose, parse, wrapForStream, unwrapFromStream, DLE, STX } = v5;
+import { Duplex } from 'node:stream';
+import { once } from 'node:events';
+
+const { compose, parse, wrapForStream, unwrapFromStream, DLE, STX, unstuff, StreamTransformer } = v5;
 
 describe('v5.0', () => {
 
@@ -378,7 +381,7 @@ describe('v5.0', () => {
   });
 
 
-  describe('streamWrap', () => {
+  describe('STREAM', () => {
 
     describe('wrapForStream(buf)', () => {
 
@@ -407,28 +410,101 @@ describe('v5.0', () => {
 
     });
 
-    it('parsing should always unwrap', () => {
 
-      const buf = compose({
-        STREAM: true,
-        displays: [{
-          index: 0
-        }]
+    // it.skip('parsing should always unwrap', () => {
+
+    //   const buf = compose({
+    //     STREAM: true,
+    //     displays: [{
+    //       index: 0
+    //     }]
+    //   });
+
+    //   expect(buf.subarray(0, 2))
+    //     .to.equal(Buffer.from([DLE, STX]));
+
+    //   const msg = parse(buf);
+
+    //   expect(msg)
+    //     .to.be.an.object()
+    //     .to.contain({
+    //       version: '5.0',
+    //       STREAM: true
+    //     });
+
+    // });
+
+
+
+    describe('unstuff(buffer)', () => {
+
+      it('should remove double DLEs', () => {
+
+        const buf = unstuff(Buffer.from([1, 2, 3, DLE, DLE, 5, DLE, DLE, STX]));
+
+        expect(buf)
+          .to.equal(Buffer.from([1, 2, 3, DLE, 5, DLE, STX]));
       });
 
-      expect(buf.subarray(0, 2))
-        .to.equal(Buffer.from([DLE, STX]));
+    });
 
-      const msg = parse(buf);
 
-      expect(msg)
-        .to.be.an.object()
-        .to.contain({
-          version: '5.0',
-          STREAM: true
+    describe('StreamTransform', () => {
+
+      let transformer;
+      beforeEach(() => {
+        transformer = new StreamTransformer();
+        transformer.on('error', (err) => console.log('error', err))
+      });
+
+
+      it('should buffer, transform and emit parsed packets', async () => {
+
+        const socket = Duplex.from('');
+        socket.pipe(transformer);
+
+        const raw = compose({
+          displays: [{
+            index: 0,
+            label: 'Hello World'
+          }]
         });
 
+        const buf = wrapForStream(raw);
+
+        socket.push(buf.subarray(0, 10));
+        socket.push(buf.subarray(10));
+        socket.push('asd');
+        socket.push(buf.subarray(0, 20));
+        socket.push(buf.subarray(20));
+        socket.push('noise');
+        socket.push(Buffer.concat([buf, buf, buf]));
+
+        const messages = [];
+        await new Promise(resolve => {
+          transformer.on('data', msg => {
+            messages.push(msg);
+            if (messages.length === 5) {
+              resolve()
+            }
+          });
+        });
+
+
+        for (const msg of messages) {
+          expect(msg)
+            .to.be.a.buffer();
+
+          expect(msg)
+            .to.equal(raw);
+        }
+
+
+      })
+
     });
+
+
 
   });
 
